@@ -1,0 +1,10 @@
+.incompletebg {
+  background-color: aqua;
+}
+.completeBackground {
+  background-color: cadetblue;
+}
+
+.formatTaskName {
+  font-size: large;
+}

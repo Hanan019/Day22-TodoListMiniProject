@@ -9,8 +9,8 @@
             required="true"
             message-when-value-missing="Please Enter Task Name."
             onchange={changeHandler}
-            name="taskName"
-            value={taskname}
+            name="taskname"
+            value={taskName}
             class="taskname"
           ></lightning-input>
           <lightning-input
@@ -18,8 +18,8 @@
             label="Enter end date"
             field-level-help="Default Date is Today's Date"
             onchange={changeHandler}
-            name="taskDate"
-            value={taskdate}
+            name="taskdate"
+            value={taskDate}
           ></lightning-input>
         </div>
         <div class="slds-var-p-around_small">
@@ -49,10 +49,13 @@
             for:item="currtask"
             for:index="index"
           >
-            <div key={currtask.taskname} class="slds-box slds-theme_shade">
+            <div
+              key={currtask.taskname}
+              class="slds-box slds-theme_shade incompletebg"
+            >
               <div class="slds-grid slds-wrap">
                 <div class="slds-col slds-size_8-of-12">
-                  <p>{currtask.taskname}</p>
+                  <p class="formatTaskName">{currtask.taskname}</p>
                   <p>
                     <lightning-formatted-date-time
                       value={currtask.taskdate}
@@ -76,7 +79,7 @@
                     icon-name="utility:task"
                     alternative-text="task"
                     class="slds-m-left_xx-small"
-                    title="Delete"
+                    title="Mark Complete"
                     onclick={CompleteTaskHandler}
                     name={index}
                   ></lightning-button-icon>
@@ -88,7 +91,24 @@
       </lightning-card>
     </div>
     <div class="slds-col">
-      <lightning-card title="Compelete Tasks"></lightning-card>
+      <lightning-card title="Compelete Tasks">
+        <div class="slds-var-p-around_small">
+          <template for:each={CompleteTasks} for:item="currtask">
+            <div key={currtask.taskname} class="completeBackground">
+              <p class="formatTaskName">{currtask.taskname}</p>
+              <p>
+                <lightning-formatted-date-time
+                  value={currtask.taskdate}
+                  year="2-digit"
+                  month="short"
+                  day="2-digit"
+                  weekday="long"
+                ></lightning-formatted-date-time>
+              </p>
+            </div>
+          </template>
+        </div>
+      </lightning-card>
     </div>
   </div>
 </template>

@@ -1,64 +1,56 @@
 import { LightningElement } from "lwc";
 
 export default class ToDoListMiniProject extends LightningElement {
-  debugger;
-  taskname = "";
-  taskdate = null;
+  taskName = "";
+  taskDate = null;
   IncompleteTasks = [];
   CompleteTasks = [];
 
   changeHandler(event) {
-    let { name1, valuee } = event.target;
-    if (name1 === "taskName") {
-      this.taskname = valuee;
-    } else if (name1 === "taskDate") {
-      this.taskdate = valuee;
+    let { name, value } = event.target;
+    if (name === "taskname") {
+      this.taskName = value;
+    } else if (name === "taskdate") {
+      this.taskDate = value;
     }
   }
+
   resetHandler() {
-    this.taskname = "";
-    this.taskdate = null;
+    this.taskName = "";
+    this.taskDate = null;
   }
+
   addTaskHandler() {
-    //first check if end date is missing  populate todays date as end dat.
-    if (!this.taskdate) {
-      this.taskdate = new Date().toISOString().slice(0, 10);
+    if (!this.taskDate) {
+      this.taskDate = new Date().toISOString().slice(0, 10);
     }
 
     if (this.validateMethod()) {
       this.IncompleteTasks = [
         ...this.IncompleteTasks,
         {
-          taskname: this.taskname,
-          taskdate: this.taskdate
+          taskname: this.taskName,
+          taskdate: this.taskDate
         }
       ];
       this.resetHandler();
-      //now after inserting the task we have to sort the array.
       let sortedArray = this.sortTasks(this.IncompleteTasks);
-      //now we have to override the array with sorted array
-      this.IncompleteTasks = [...sortedArray]; // this will sort the array.
-
-      console.log("this.incompleteTasks ", this.IncompleteTasks);
+      this.IncompleteTasks = [...sortedArray];
     }
   }
 
   validateMethod() {
-    //to check if the task already exists..?
     let isValid = true;
     let element = this.template.querySelector(".taskname");
-    //condition 1.. check if task is empty or not.?
-    //condition 2.. if taskname not empty,,,> check for duplicate.
-    if (!this.taskname) {
-      //check if the task is empty ..?
-      this.isValid = true;
+
+    if (!this.taskName) {
+      isValid = false;
+      element.setCustomValidity("Please Enter Task Name.");
     } else {
-      //if find method  will find an item in array it will return task item.,
-      // if not found, it will return undefined.
       let taskItem = this.IncompleteTasks.find(
         (currItem) =>
-          currItem.taskname === this.taskname &&
-          currItem.taskdate === this.taskdate
+          currItem.taskname === this.taskName &&
+          currItem.taskdate === this.taskDate
       );
       if (taskItem) {
         isValid = false;
@@ -75,26 +67,23 @@ export default class ToDoListMiniProject extends LightningElement {
   }
 
   sortTasks(inputArray) {
-    let sortedArray = inputArray.sort((a, b) => {
-      const dateA = new Date(a.taskdate);
-      const dateB = new Date(b.taskdate);
-      return dateA - dateB;
-    });
-    return sortedArray;
+    return inputArray.sort(
+      (a, b) => new Date(a.taskdate) - new Date(b.taskdate)
+    );
   }
+
   removalHandler(event) {
-    //from incomplete task array we have to remove the item
     let index = event.target.name;
     this.IncompleteTasks.splice(index, 1);
-    this.IncompleteTasks = [...this.sortedArray];
     let sortedArray = this.sortTasks(this.IncompleteTasks);
     this.IncompleteTasks = [...sortedArray];
-    console.log("this incompletetasks", this.IncompleteTasks);
   }
+
   CompleteTaskHandler(event) {
     let index = event.target.name;
     let removeItem = this.IncompleteTasks.splice(index, 1);
-    //add some entry in comlete item
-    this.CompleteTasks = [...this.CompleteTasks, removeItem[0]];
+    let sortedArray = this.sortTasks(this.IncompleteTasks);
+    this.IncompleteTasks = [...sortedArray];
+    this.CompleteTasks.push(removeItem[0]);
   }
 }
