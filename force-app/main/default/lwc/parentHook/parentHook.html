@@ -1,0 +1,16 @@
+<template>
+  <lightning-card title="Lifecycle Hook Demo">
+    <!--NOW SINCE  we cwant to call the child compoenent inside the parent
+    it will be in kebab case as below.-->
+    <lightning-
+      class="slds-var-p-around_small"
+      type="checkbox"
+      lable="Invoke Child"
+      onchange={changeHandler}
+    ></lightning->
+    <template lwc:if={displayChild}>
+      <!--IF the Checkbox is true then only this child component will be called here.-->
+      <c-child-hook></c-child-hook>
+    </template>
+  </lightning-card>
+</template>
